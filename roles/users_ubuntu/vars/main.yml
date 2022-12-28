@@ -1,0 +1,8 @@
+users: [
+ {
+   name: "amoroz",
+   group: "sysadmin",
+   key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDI9n2QM1KOqn37QPPrONb8b7UxKPvt+hWwP3Hkl1+/xHNYcCioJsxwn//b78sI8lIO7+mw8w6haxq/gLSfNx7d37beo4NkOBKQKacreEb+OZcZ0ol3kazsrLGsi2B0/D8K/q31hvTDcCw9TSc0NXkhLOE1dJ1FYOdHJ05jfxypaF2RC887XvdP9tIW5eQwO51Jpr1aQmD4UYeALdtm3c/dtEQnZVCiJBuHR9HWMYT0xClUyfoy9LsNTy4XIf0Cgz8o7MyZ8Y4v2qWC2GE6Ym16UeelchggBv5aSQiTG9+3KggEGI3tjFFu/CRh6rGuV5SdHfDLIxiqWlTYkob1woZ+GyP57kF0o9z5UrgXNackZVLYddW4stmFqKjepyv9r3xYQOV6tZ3JaIKFhvc20RzyUv9v+g5kaCkOKIGR0TtkUFPie9sAfa24GvpbXEYG/uoaFHAM23A8xO05bkyG4cXNzxhZkh4S+pLRRa/fP2JxoQINH5y62PkqL/CNl8hEjWk= Andrei Maroz@DESKTOP-E4NHJBR",
+   uid: 10000
+ }
+]

@@ -1,0 +1,53 @@
+- name: Create sysadmin group
+  group: name=sysadmin state=present
+  tags: create-sysadmins
+
+- name: Create sysadmin Users
+  user: name={{ item.name }} groups={{ item.group }} shell=/bin/bash state=present uid={{ item.uid }} non_unique=yes
+  ignore_errors: yes
+  with_items: '{{ users }}'
+  when: item.name != 'root'  and item.name in allowed_users and item.group == "sysadmin"
+  tags:  create-users
+
+- name: Create regular Users
+  user: name={{ item.name }} groups={{ item.group }} shell=/bin/bash state=present uid={{ item.uid }} non_unique=yes
+  ignore_errors: yes
+  with_items: '{{ users }}'
+  when: item.name != 'root'  and item.name in allowed_users and item.group != "sysadmin"
+  tags:  create-users
+
+- name: Create Technical users
+  user: name={{ item.name }} groups={{ item.group }} shell= state=present uid={{ item.uid }} non_unique=yes
+  ignore_errors: yes
+  with_items: '{{ users }}'
+  when: item.name != 'root'  and item.name in allowed_users and item.group == "sysadmin" and item.name == "ansible"
+  tags:  create-users
+
+- name: Enable sudo for sysadmin group
+  lineinfile: dest="/etc/sudoers" state=present line="%sysadmin ALL     = (ALL) NOPASSWD:ALL" regexp="sysadmin"
+  when:
+  tags: create-sysadmins
+
+- name: Provision SSH keys
+  authorized_key: user={{ item.name }}
+                  key="{{ item.key }}"
+                  state=present
+  with_items: '{{users}}'
+  when:
+    - item.name != 'root'
+    - item.name in allowed_users
+  tags: create-sysadmins
+
+- name: "Disable password auth for SSH"
+  lineinfile: dest=/etc/ssh/sshd_config line="{{ item.name }} no" regexp="^{{ item.name }}" state=present
+  with_items:
+    - { name: PasswordAuthentication }
+    - { name: ChallengeResponseAuthentication }
+  notify: reload ssh
+
+- name: "Enable bash logging"
+  lineinfile:
+    dest: /etc/bash.bashrc
+    line: |-
+      export PROMPT_COMMAND='RETRN_VAL=$?;logger -p local6.info -t cmdlog "$(who -m | cut -f 1 -d " ") as $(whoami) [$$] # $(history 1 | sed "s/^[ ]*[0-9]\+[ ]*//" ) [$RETRN_VAL]"'
+    regexp: "local6"

@@ -1,0 +1,17 @@
+---
+
+- name: Include deploy Docker for RedHat system
+  include: docker_redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include deploy Docker for Debian system
+  include: docker_debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Change hosts file
+  template:
+    src: "hosts.j2"
+    dest: "/etc/hosts"
+    backup: yes
+  tags:
+    - hosts

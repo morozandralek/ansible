@@ -1,0 +1,40 @@
+---
+
+- name: Creates directory
+  file:
+    path: /opt/rancher/ssl
+    state: directory
+    recurse: yes
+
+- name: Copy CA files
+  copy:
+    src: '{{item}}'
+    dest: '/opt/rancher/ssl/'
+  loop:
+    - cert.pem
+    - key.pem
+
+- name: Running docker-compose
+  community.docker.docker_compose:
+    project_name: runcher
+    definition:
+      version: '3'
+      services:
+        rancher:
+          restart: unless-stopped
+          privileged: true
+          container_name: rancher
+          hostname: rancher
+          image: rancher/rancher:latest
+          volumes:
+            - /opt/rancher/data:/var/lib/rancher
+            - /opt/rancher/ssl/cert.pem:/etc/rancher/ssl/cert.pem
+            - /opt/rancher/ssl/key.pem:/etc/rancher/ssl/key.pem
+            - /opt/rancher/log/:/var/log/auditlog
+          environment:
+            - AUDIT_LEVEL=1
+          ports:
+            - 80:80
+            - 443:443
+          command:
+            - --no-cacerts

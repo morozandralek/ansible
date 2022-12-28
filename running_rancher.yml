@@ -1,0 +1,6 @@
+- name: Running runcher
+  hosts: rancher
+  become: yes
+  become_user: root
+  roles:
+    - rancher

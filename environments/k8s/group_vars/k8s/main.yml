@@ -1,0 +1,2 @@
+hosts_records:
+  - { name: "k8s.ozalliance.by", ip: "192.168.56.10" }
